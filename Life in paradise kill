@@ -1,0 +1,48 @@
+local plr = game:GetService("Players")
+local lp = plr.LocalPlayer
+local bp = lp.Backpack
+local chr = lp.Character
+local hrp = chr.HumanoidRootPart
+
+function GetChar(part)
+  if part == workspace then
+      return 0
+  elseif part.Parent == workspace then
+    if part:FindFirstChild("Humanoid") and part.Humanoid:IsA("Humanoid") then
+      return part;
+    end
+  elseif part.Parent then
+    return GetChar(part.Parent)
+  end
+end
+
+mouse = lp:GetMouse()
+tool = Instance.new("Tool")
+tool.RequiresHandle = false
+tool.Name = "Bring"
+tool.Activated:connect(function()
+
+if GetChar(mouse.Target) then
+local opos = hrp.CFrame
+local stroller = bp.Stroller
+stroller.Parent = chr
+ermi = GetChar(mouse.Target).HumanoidRootPart
+for i=1,7 do
+ermi.CFrame = stroller.MainPart.CFrame*CFrame.new(0,1,0)
+task.wait()
+hrp.Velocity = Vector3.new(0,10,0)
+task.wait()
+end
+game:GetService("Workspace").Events.Teleport:FireServer(CFrame.new(-669.1,50,148))
+wait(0.5)
+stroller.Parent = bp
+
+tool.Parent = bp;tool.Parent = chr
+chr.Humanoid.Sit = true
+task.wait(0.05)
+chr.Humanoid.Sit = false
+hrp.Velocity = Vector3.new(0,0,0)
+hrp.CFrame = opos
+end
+end)
+tool.Parent = bp
